@@ -128,7 +128,7 @@ Siguiendo con la enumeración, y listando la carpeta 'Users' dentro de 'Departme
 
 ![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/1f98ebfb-84c5-497a-bd5c-5d9fde3950a8)
 
-Aprovechamos que tenemos acceso con usuario anónimo (null session) sobre 'Department Shares/Users', podemos enumerar para comprobar si tenemos permisos de escritura en alguna carpeta dentro de 'Users'. Para ello, vamos a utilizar los siguientes comandos.
+Aprovechando que tenemos acceso con usuario anónimo (null session) sobre 'Department Shares/Users', podemos enumerar para comprobar si tenemos permisos de escritura en alguna carpeta dentro de 'Users'. Para ello, vamos a utilizar los siguientes comandos.
 
 Primero, montamos el compartido en nuestro local para movernos más fácilmente a través de él:
 
@@ -166,7 +166,7 @@ Comprobamos por ejemplo el de la usuaria 'amanda' utilizando smbcacls:
 
 Tenemos que fijarnos en 'Everyone', que en este caso tienen el permiso 'READ'. Vamos a comprobar todos los demás directorios automáticamente:
 
-    for directory in $(ls); do echo -e "\n ${GREEN} [+] Comprobando permisos para el directorio $directory:\n"; echo -e "\t$(smbcacls "//10.10.10.103/Department Shares" Users/$directory -N | grep "Everyone")";done
+    for directory in $(ls); do echo -e "\n [+] Comprobando permisos para el directorio $directory:\n"; echo -e "\t$(smbcacls "//10.10.10.103/Department Shares" Users/$directory -N | grep "Everyone")";done
 
 El directorio 'Public' tiene permisos 'FULL' para 'Everyone':
 
@@ -188,5 +188,25 @@ Creamos el archivo y por otro lado nos ponemos en escucha con, por ejemplo, smbs
 Recibimos el hash de la usuaria 'amanda':
 
 ![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/86e4e78c-3fa0-4027-9ccb-4eb7e6a18079)
+
+Utilizando JTR podemos crackear el hash y obtenemos la contraseña de 'amanda' en texto claro:
+
+    john --wordlist=/usr/share/wordlists/rockyou.txt amanda.hash
+
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/09d15863-30b0-4c7d-9175-248739e88af6)
+
+Comprobamos con CME que la contraseña es válida:
+
+    crackmapexec smb 10.10.10.103 -u amanda -p 'REDACTED'
+
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/6a2f0b71-c6c6-4e88-9823-c49a3408ff15)
+
+También probamos con 'winrm', pero nos da un error desconocido:
+
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/e2a91eed-5dd9-4238-a729-4a0542fa993f)
+
+### Puerto 80 - HTTP
+
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/d2079eda-9a8b-4ebb-a742-04c30cb9c394)
 
 
