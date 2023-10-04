@@ -122,11 +122,11 @@ Utilizando smbmap, con un nombre de usuario cualquiera para entrar como invitado
 
     smbmap -H 10.10.10.103 -u "ssa"
 
-![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/f391c096-9071-42d3-b257-3abae8893f9c)
+    ![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/f391c096-9071-42d3-b257-3abae8893f9c)
 
 Siguiendo con la enumeración, y listando la carpeta 'Users' dentro de 'Department Shares', podemos ver una lista de usuarios, que puede venirnos bien para el futuro:
 
-![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/1f98ebfb-84c5-497a-bd5c-5d9fde3950a8)
+    ![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/1f98ebfb-84c5-497a-bd5c-5d9fde3950a8)
 
 Aprovechamos que tenemos acceso con usuario anónimo (null session) sobre 'Department Shares/Users', podemos enumerar para comprobar si tenemos permisos de escritura en alguna carpeta dentro de 'Users'. Para ello, vamos a utilizar los siguientes comandos.
 
@@ -170,5 +170,5 @@ Tenemos que fijarnos en 'Everyone', que en este caso tienen el permiso 'READ'. V
 
 El directorio 'Public' tiene permisos 'FULL' para 'Everyone':
 
-![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/21777aa2-f1e4-4534-8bcc-3819f5d3e3ec)
+    ![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/21777aa2-f1e4-4534-8bcc-3819f5d3e3ec)
 
