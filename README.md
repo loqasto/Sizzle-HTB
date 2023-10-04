@@ -1,7 +1,7 @@
 # Sizzle-HTB
-Máquina Sizzle de HackTheBox
+## Máquina Sizzle de HackTheBox
 
-## Escaneo inicial con nmap
+### Escaneo inicial con nmap
 
     └─# nmap -p- -sS --open --min-rate 5000 -n -Pn 10.10.10.103 -oG mapscan
     Starting Nmap 7.93 ( https://nmap.org ) at 2023-10-04 17:56 CEST
@@ -30,7 +30,7 @@ Máquina Sizzle de HackTheBox
               
     Nmap done: 1 IP address (1 host up) scanned in 39.66 seconds
 
-## Escaneo de servicios y scripts por defecto:
+### Escaneo de servicios y scripts por defecto:
 
     └─# nmap -p21,53,80,135,139,389,443,445,464,593,636,3268,3269,5985,5986,9389,47001 -sCV 10.10.10.103 -oN portscan                                         
     Starting Nmap 7.93 ( https://nmap.org ) at 2023-10-04 18:11 CEST
