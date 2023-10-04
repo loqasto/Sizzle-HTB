@@ -116,5 +116,12 @@
     Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
     Nmap done: 1 IP address (1 host up) scanned in 108.08 seconds
 
+### Puerto 445 - SMB
+
+Utilizando smbmap, con un nombre de usuario cualquiera para entrar como invitado - ya que a veces quizás nos dé error si entramos sin usuario - vemos una carpeta compartida interesante llamada "Department Shares"
+
+    smbmap -H 10.10.10.103 -u "ssa"
+
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/f391c096-9071-42d3-b257-3abae8893f9c)
 
     
