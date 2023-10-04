@@ -128,3 +128,47 @@ Siguiendo con la enumeración, y listando la carpeta 'Users' dentro de 'Departme
 
 ![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/1f98ebfb-84c5-497a-bd5c-5d9fde3950a8)
 
+Aprovechamos que tenemos acceso con usuario anónimo (null session) sobre 'Department Shares/Users', podemos enumerar para comprobar si tenemos permisos de escritura en alguna carpeta dentro de 'Users'. Para ello, vamos a utilizar los siguientes comandos.
+
+Primero, montamos el compartido en nuestro local para movernos más fácilmente a través de él:
+
+    mkdir /mnt/montura
+    mount -t cifs "//10.10.10.103/Department Shares" /mnt/montura
+
+Accedemos a él y listamos:
+
+    └─# ls -lrth
+    total 0
+    drwxr-xr-x 2 root root 0 jul  2  2018 bill
+    drwxr-xr-x 2 root root 0 jul  2  2018 bob
+    drwxr-xr-x 2 root root 0 jul  2  2018 joe
+    drwxr-xr-x 2 root root 0 jul  2  2018 henry
+    drwxr-xr-x 2 root root 0 jul  2  2018 amanda
+    drwxr-xr-x 2 root root 0 jul  2  2018 morgan
+    drwxr-xr-x 2 root root 0 jul  2  2018 jose
+    drwxr-xr-x 2 root root 0 jul  2  2018 amanda_adm
+    drwxr-xr-x 2 root root 0 jul  2  2018 chris
+    drwxr-xr-x 2 root root 0 jul  2  2018 mrb3n
+    drwxr-xr-x 2 root root 0 jul 10  2018 lkys37en
+    drwxr-xr-x 2 root root 0 oct  4 19:09 Public
+
+Comprobamos por ejemplo el de la usuaria 'amanda' utilizando smbcacls:
+
+    smbcacls "//10.10.10.103/Department Shares" Users/amanda -N
+        REVISION:1
+        CONTROL:SR|DI|DP
+        OWNER:BUILTIN\Administrators
+        GROUP:HTB\Domain Users
+        ACL:S-1-5-21-2379389067-1826974543-3574127760-1000:ALLOWED/OI|CI|I/FULL
+        ACL:BUILTIN\Administrators:ALLOWED/OI|CI|I/FULL
+        ACL:Everyone:ALLOWED/OI|CI|I/READ
+        ACL:NT AUTHORITY\SYSTEM:ALLOWED/OI|CI|I/FULL
+
+Tenemos que fijarnos en 'Everyone', que en este caso tienen el permiso 'READ'. Vamos a comprobar todos los demás directorios automáticamente:
+
+    for directory in $(ls); do echo -e "\n ${GREEN} [+] Comprobando permisos para el directorio $directory:\n"; echo -e "\t$(smbcacls "//10.10.10.103/Department Shares" Users/$directory -N | grep "Everyone")";done
+
+El directorio 'Public' tiene permisos 'FULL' para 'Everyone':
+
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/21777aa2-f1e4-4534-8bcc-3819f5d3e3ec)
+
