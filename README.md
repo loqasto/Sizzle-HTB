@@ -2,7 +2,7 @@
 Máquina Sizzle de HackTheBox
 
 Escaneo inicial con nmap
-          
+
           └─# nmap -p- -sS --open --min-rate 5000 -n -Pn 10.10.10.103 -oG mapscan
           Starting Nmap 7.93 ( https://nmap.org ) at 2023-10-04 17:56 CEST
           Nmap scan report for 10.10.10.103
