@@ -118,10 +118,13 @@
 
 ### Puerto 445 - SMB
 
-Utilizando smbmap, con un nombre de usuario cualquiera para entrar como invitado - ya que a veces quizás nos dé error si entramos sin usuario - vemos una carpeta compartida interesante llamada "Department Shares"
+Utilizando smbmap, con un nombre de usuario cualquiera para entrar como invitado - ya que a veces quizás nos dé error si entramos sin usuario - vemos una carpeta compartida interesante llamada 'Department Shares'
 
     smbmap -H 10.10.10.103 -u "ssa"
 
 ![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/f391c096-9071-42d3-b257-3abae8893f9c)
 
-    
+Siguiendo con la enumeración, y listando la carpeta 'Users' dentro de 'Department Shares', podemos ver una lista de usuarios, que puede venirnos bien para el futuro:
+
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/1f98ebfb-84c5-497a-bd5c-5d9fde3950a8)
+
