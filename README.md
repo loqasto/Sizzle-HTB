@@ -219,21 +219,55 @@ Efectivamente, comprobamos que al acceder a través de 'http://10.10.10.103/cert
 
 ![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/d2079eda-9a8b-4ebb-a742-04c30cb9c394)
 
-Accedemos con las credenciales de 'amanda' descubiertas previamente. Llegamos a la siguiente url de AD que nos permite crear certificados:
+Accedemos utilziando las credenciales de 'amanda' descubiertas anteriormente. Legamos a una url de AD que nos permite generar certificados:
 
     Microsoft Active Directory Certificate Services  --  HTB-SIZZLE-CA  
 
-Seleccionamos 'Request a certificate':
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/89c44e98-5134-4783-8581-9fd105fa4a30)
 
-![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/8c352ae1-e843-4eda-92f9-fad908303f6e)
+Vamos 'Request a certificate' y después a 'advanced certificate request':
 
-Y luego vamos a 'advanced certificate request':
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/5ae95159-3db4-4072-a8cf-184416a26a38)
 
-![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/0e129e9c-269b-4d9f-b4c8-5bd65ccdc402)
+Una vez aquí, nos pide el código del certificado codificado en base64:
 
-Una vez aquí, volvemos a nuestra consola y generamos un nuevo certificado para 'amanda', que genera dos archivos: certnew.cer - certifiado público y amanda.key - certificado privado:
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/9658df15-0a8c-4421-8bab-465d788f4f9f)
 
-@@└─# evil-winrm -S -c certnew.cer -k amanda.key -i 10.10.10.103 -u 'amanda' -p 'Ashare1972'
+Para generarlo, tenemos que ejecutar el siguiente comando con 'openssl', que va a generar dos archivos: amanda.csr - clave pública - y amanda.key - clave privada.
+
+    └─# openssl req -newkey rsa:2048 -nodes -keyout amanda.key -out amanda.csr
+
+Una vez generados, consultamos la clave pública 'amanda.csr':
+
+    └─# cat amanda.csr 
+    
+    -----BEGIN CERTIFICATE REQUEST-----
+    MIICijCCAXICAQAwRTELMAkGA1UEBhMCQVUxEzARBgNVBAgMClNvbWUtU3RhdGUx
+    ITAfBgNVBAoMGEludGVybmV0IFdpZGdpdHMgUHR5IEx0ZDCCASIwDQYJKoZIhvcN
+    AQEBBQADggEPADCCAQoCggEBALBaK2lUO3Ay2k6s+VKlQai+NQ+QZXwgNC9L4wV+
+    3gGVz0xgwAsEf4VmoG0+Crz4jl6f8rvszl2+MNESnIcAPdqneCHb41g1tkNN1T9g
+    T6pIRIViMtLS0s1Xjagv28kKenX6uMUyQQkD6fsRdJ/cSLPx92NQWzcuev0RmFVe
+    yVwh9v0Bc0vWzU2YYSRm0BtNJZvRCvlw662OST7ovPbCEXXFtodQIwgIFDzVE01K
+    4KapSbgXLk7YX1ExR9lbQ1JVZE3XE9HrQuOzelZGOtx+t3h5hYLpuvpUO4FoXUPV
+    yZl5Ym3wzvvRmDC+25l/pBc7u7WMotrvSiM3odEWQFyyZu8CAwEAAaAAMA0GCSqG
+    SIb3DQEBCwUAA4IBAQBkn2RJhJO3LkN3z1/ivXXdCQgz8Ko3n3vPe4FBHF0uJf/Q
+    S68X/cD7oE/OJr7NLcUuaultfsx+L68X8LDRsOMd724OXYUuV6m7VRX3gs1y6VkV
+    hpR7SDaVJGa+4NzZK1AJLxKXmC3phFsh/Gxyb+oUuepfucVAQQR7dOUu6rp6ZBUr
+    H83ZPHL1F4Hhjc1PuJ/PTXzVCAfn8i9pXNftPEJsWsCHIrmdRHl/Kw0T3UuPSXWc
+    25OdYg/RUtX6Cs1xqqE0l4//h9mwH+mcA8dhxtEKEb227JiKkuuvWJTEd5KSdgPk
+    pTtJg94cbsZpZ/M0sjMMloEqDlawZNRYwubqsctm
+    -----END CERTIFICATE REQUEST-----
+
+La copiamos y la pegamos en el generador de certificados:
+
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/faa39601-ff51-4236-8f43-adad25c4b3b2)
+
+Y generamos y descargamos el nuevo certificado 'certnew.cer'. 
+
+Gracias a este certificado, podemos conectarnos al servicio 'winrm' a través del protocolo SSL:
+
+    └─# evil-winrm -S -c certnew.cer -k amanda.key -i 10.10.10.103 -u 'amanda' -p '<REDACTED>'
+
 
 
 
