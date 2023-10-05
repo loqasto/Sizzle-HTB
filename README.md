@@ -215,8 +215,28 @@ La mayoría de ellos nos devuelven un error '403' - Forbidden, pero si nos fijam
 
 ![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/9799b2f8-6f19-4776-a679-36ee21268870)
 
-Efectivamente, comprobamos que al acceder a través de 'http://10.10.10.103/certsrv nos aparece un cuadro de diálogo con un formulario:
+Efectivamente, comprobamos que al acceder a través de 'http://10.10.10.103/certsrv' nos aparece un cuadro de diálogo con un formulario:
 
 ![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/d2079eda-9a8b-4ebb-a742-04c30cb9c394)
+
+Accedemos con las credenciales de 'amanda' descubiertas previamente. Llegamos a la siguiente url de AD que nos permite crear certificados:
+
+    Microsoft Active Directory Certificate Services  --  HTB-SIZZLE-CA  
+
+Seleccionamos 'Request a certificate':
+
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/8c352ae1-e843-4eda-92f9-fad908303f6e)
+
+Y luego vamos a 'advanced certificate request':
+
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/0e129e9c-269b-4d9f-b4c8-5bd65ccdc402)
+
+Una vez aquí, volvemos a nuestra consola y generamos un nuevo certificado para 'amanda', que genera dos archivos: certnew.cer - certifiado público y amanda.key - certificado privado:
+
+@@└─# evil-winrm -S -c certnew.cer -k amanda.key -i 10.10.10.103 -u 'amanda' -p 'Ashare1972'
+
+
+
+
 
 
