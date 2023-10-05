@@ -207,6 +207,16 @@ También probamos con 'winrm', pero nos da un error desconocido:
 
 ### Puerto 80 - HTTP
 
+Utilizando la herramienta de fuzzing 'gobuster', encontramos varios subdirectorios:
+
+    └─# gobuster dir -u http://10.10.10.103/ -w /usr/share/seclists/Discovery/Web-Content/IIS.fuzz.txt 
+
+La mayoría de ellos nos devuelven un error '403' - Forbidden, pero si nos fijamos en '/certsrv' tenemos un 401. Es decir, que necesita credenciales para acceder:
+
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/9799b2f8-6f19-4776-a679-36ee21268870)
+
+Efectivamente, comprobamos que al acceder a través de 'http://10.10.10.103/certsrv nos aparece un cuadro de diálogo con un formulario:
+
 ![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/d2079eda-9a8b-4ebb-a742-04c30cb9c394)
 
 
