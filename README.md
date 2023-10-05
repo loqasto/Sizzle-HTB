@@ -205,6 +205,16 @@ También probamos con 'winrm', pero nos da un error desconocido:
 
 ![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/e2a91eed-5dd9-4238-a729-4a0542fa993f)
 
+Si volvemos a nuestro escaneo nmap de servicios, veremos que además del puerto por defecto de 'winrm' 5985, también está abierto el puerto 5986, que se utiliza también para conectarse a 'winrm' a través del protocolo SSL:
+
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/25d37d49-1b8e-4cce-ad5f-47e30ced48fa)
+
+Para ello, necesitamos añadirle los siguientes parámetros:
+
+    -S, --ssl                        Enable ssl
+    -c, --pub-key PUBLIC_KEY_PATH    Local path to public key certificate
+    -k, --priv-key PRIVATE_KEY_PATH  Local path to private key certificate
+
 ### Puerto 80 - HTTP
 
 Utilizando la herramienta de fuzzing 'gobuster', encontramos varios subdirectorios:
