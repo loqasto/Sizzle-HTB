@@ -219,4 +219,28 @@ Efectivamente, comprobamos que al acceder a través de 'http://10.10.10.103/cert
 
 ![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/d2079eda-9a8b-4ebb-a742-04c30cb9c394)
 
+Accedemos utilziando las credenciales de 'amanda' descubiertas anteriormente. Legamos a una url de AD que nos permite generar certificados:
+
+    Microsoft Active Directory Certificate Services  --  HTB-SIZZLE-CA  
+
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/89c44e98-5134-4783-8581-9fd105fa4a30)
+
+Vamos 'Request a certificate' y después a 'advanced certificate request':
+
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/5ae95159-3db4-4072-a8cf-184416a26a38)
+
+Una vez aquí, nos pide el código del certificado codificado en base64:
+
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/9658df15-0a8c-4421-8bab-465d788f4f9f)
+
+Para generarlo, tenemos que ejecutar el siguiente comando con 'openssl', que va a generar dos archivos: certnew.cer - clave pública - y amanda.key - clave privada.
+
+    └─# openssl req -newkey rsa:2048 -nodes -keyout amanda.key -out amanda.csr
+
+
+
+
+
+
+
 
